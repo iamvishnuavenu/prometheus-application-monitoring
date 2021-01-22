@@ -8,41 +8,40 @@ volumes:
 
 services:
   application:
-    build: ./<app>/
+    build: ./restful-api-express-mongoose/
     networks:
       - dev-net    
     environment:
       - 'MONGODB_URI=mongodb://mongodb:27017/db'
-      - 'KAFKA_HOST=kafka-server:9092'
     ports:
-      - "8018:8018"
-
+      - "8080:8080"
+    restart: always
   mongodb:
     image: "mongo:3.6.20-xenial"
     networks:
       - dev-net    
   
-  zookeeper-server:
-    image: 'bitnami/zookeeper:latest'
-    networks:
-      - dev-net
-    ports:
-      - '2181:2181'
-    environment:
-      - ALLOW_ANONYMOUS_LOGIN=yes
+#  zookeeper-server:
+#    image: 'bitnami/zookeeper:latest'
+#    networks:
+#      - dev-net
+#    ports:
+#      - '2181:2181'
+#    environment:
+#      - ALLOW_ANONYMOUS_LOGIN=yes
 
-  kafka-server:
-    image: 'bitnami/kafka:latest'
-    networks:
-      - dev-net    
-    ports:
-      - '9092:9092'
-    environment:
-      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper-server:2181
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
-      - ALLOW_PLAINTEXT_LISTENER=yes
-    depends_on:
-      - zookeeper-server
+#  kafka-server:
+#    image: 'bitnami/kafka:latest'
+#    networks:
+#      - dev-net    
+#    ports:
+#      - '9092:9092'
+#    environment:
+#      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper-server:2181
+#      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
+#      - ALLOW_PLAINTEXT_LISTENER=yes
+#    depends_on:
+#      - zookeeper-server
   
   prometheus:
     image: prom/prometheus:v2.22.0-rc.0
